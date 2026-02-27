@@ -1,7 +1,7 @@
 """Pydantic schemas for label hierarchies, classification results, and batch processing state."""
 
-from .labels import LabelNode, LabelHierarchy
-from .classification import ClassificationStatus, ClassificationResult, BatchState
+from .classification import BatchState, ClassificationResult, ClassificationStatus
+from .labels import LabelHierarchy, LabelNode
 
 __all__ = [
     "LabelNode",

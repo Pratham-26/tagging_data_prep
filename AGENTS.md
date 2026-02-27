@@ -10,34 +10,31 @@ DSPy-based hierarchical text classifier. Processes text through multi-level labe
 
 ```bash
 # Install dependencies
-pip install -e ".[dev]"
+uv sync --all-extras
 
 # Run all tests
-pytest
+uv run pytest
 
 # Run a single test file
-pytest tests/test_schemas.py
+uv run pytest tests/test_schemas.py
 
 # Run a single test function
-pytest tests/test_schemas.py::test_label_node_is_leaf
+uv run pytest tests/test_schemas.py::test_label_node_is_leaf
 
 # Run tests with coverage
-pytest --cov=src --cov-report=term-missing
+uv run pytest --cov=src --cov-report=term-missing
 
 # Run specific test marker (if configured)
-pytest -m "not slow"
-
-# Type checking
-mypy src
+uv run pytest -m "not slow"
 
 # Linting
-ruff check src
+uv run ruff check src tests
 
 # Format code
-ruff format src
+uv run ruff format src tests
 
 # Format check (without modifying)
-ruff format --check src
+uv run ruff format --check src tests
 ```
 
 ## Code Style Guidelines

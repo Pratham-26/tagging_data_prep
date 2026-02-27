@@ -5,14 +5,18 @@ from __future__ import annotations
 Provides LabelNode for individual nodes in the tree and LabelHierarchy
 for the complete label tree with navigation and validation utilities.
 """
-from pydantic import BaseModel, model_validator
-from typing import Optional
+
+from pydantic import BaseModel, PrivateAttr
 
 
 class LabelNode(BaseModel):
     id: str
     description: str = ""
     children: list[LabelNode] = []
+    _child_map: dict[str, LabelNode] = PrivateAttr(default_factory=dict)
+
+    def model_post_init(self, _) -> None:
+        self._child_map = {child.id: child for child in self.children}
 
     def is_leaf(self) -> bool:
         return len(self.children) == 0
@@ -23,17 +27,14 @@ class LabelNode(BaseModel):
     def get_child_descriptions(self) -> dict[str, str]:
         return {child.id: child.description for child in self.children}
 
-    def get_child(self, child_id: str) -> Optional[LabelNode]:
-        for child in self.children:
-            if child.id == child_id:
-                return child
-        return None
+    def get_child(self, child_id: str) -> LabelNode | None:
+        return self._child_map.get(child_id)
 
 
 class LabelHierarchy(BaseModel):
     root: LabelNode
 
-    def get_node(self, path: list[str]) -> Optional[LabelNode]:
+    def get_node(self, path: list[str]) -> LabelNode | None:
         """Get node at given path. Empty path returns root."""
         current = self.root
         for label_id in path:
@@ -65,3 +66,19 @@ class LabelHierarchy(BaseModel):
             check_duplicates(child, [child.id])
 
         return errors
+
+    def get_all_leaf_paths(self) -> list[list[str]]:
+        """Return paths to all leaf nodes in the hierarchy."""
+        paths = []
+
+        def traverse(node: LabelNode, current_path: list[str]) -> None:
+            if node.is_leaf():
+                paths.append(current_path)
+            else:
+                for child in node.children:
+                    traverse(child, current_path + [child.id])
+
+        for child in self.root.children:
+            traverse(child, [child.id])
+
+        return paths

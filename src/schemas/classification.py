@@ -8,11 +8,11 @@ individual classification outcomes, and BatchState for managing batch processing
 with checkpointing support.
 """
 
-from pydantic import BaseModel
-from enum import Enum
-from typing import Optional
 import json
+from enum import Enum
 from pathlib import Path
+
+from pydantic import BaseModel
 
 
 class ClassificationStatus(str, Enum):
@@ -25,7 +25,7 @@ class ClassificationResult(BaseModel):
     text: str
     path: list[str]
     status: ClassificationStatus
-    failed_at_level: Optional[int] = None
+    failed_at_level: int | None = None
     retry_count: int = 0
 
 

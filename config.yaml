@@ -1,0 +1,20 @@
+lms:
+  optimizer:
+    model: "openai/gpt-4o"
+    api_key: "env:OPENAI_API_KEY"
+  classifier:
+    model: "openai/gpt-4o-mini"
+    api_key: "env:OPENAI_API_KEY"
+
+data:
+  corpus_path: "./data/corpus.txt"
+  sample_size: 100
+  delimiter: null
+
+gepa:
+  max_metric_calls_per_path: 50
+  run_dir: "./gepa_runs"
+
+paths:
+  hierarchy: "./labels.json"
+  prompts: "./prompts.json"
