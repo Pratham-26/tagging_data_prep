@@ -8,10 +8,13 @@ reflective feedback for improvement.
 """
 
 import json
+import logging
 from typing import Any
 
 import dspy
 from gepa import EvaluationBatch, GEPAAdapter
+
+logger = logging.getLogger(__name__)
 
 from .training_data import PathTrainingInstance
 
@@ -81,7 +84,8 @@ class ClassificationAdapter(GEPAAdapter):
                 else:
                     trajectories.append({})
 
-            except Exception:
+            except Exception as e:
+                logger.warning("Classification failed for instance: %s", e)
                 outputs.append("error")
                 trajectories.append({})
 

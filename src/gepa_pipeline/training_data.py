@@ -7,10 +7,13 @@ where each instance represents a single classification decision
 at a specific point in the hierarchy.
 """
 
+import logging
 from dataclasses import dataclass
 
 from ..schemas.labels import LabelHierarchy
 from .labeler import LabeledExample
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -43,10 +46,12 @@ def build_training_data(
             node = hierarchy.get_node(list(parent_path))
 
             if node is None:
+                logger.warning("Node not found for path %s, skipping example", list(parent_path))
                 continue
 
             child = node.get_child(expected_label)
             if child is None:
+                logger.warning("Child %s not found in node, skipping example", expected_label)
                 continue
 
             instance = PathTrainingInstance(

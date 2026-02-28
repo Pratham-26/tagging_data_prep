@@ -156,7 +156,7 @@ class HierarchicalClassifier:
             )
 
         text_to_idx = {text: i for i, text in enumerate(state.pending_texts)}
-        state.results.sort(key=lambda r: text_to_idx.get(r.text, 0))
+        state.results.sort(key=lambda r: text_to_idx[r.text])
 
         return state.results
 
